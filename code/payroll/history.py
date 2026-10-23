@@ -133,8 +133,8 @@ def combine_exports(exports: list) -> pd.DataFrame:
       you write returns a DataFrame where you expected a row.
     - No `.copy()` needed — `concat` always builds a new frame.
     """
-    # TODO: your code here
-    pass
+    return pd.concat(exports, ignore_index=True)
+
 
 
 def add_clean_columns(history: pd.DataFrame) -> pd.DataFrame:
@@ -161,8 +161,13 @@ def add_clean_columns(history: pd.DataFrame) -> pd.DataFrame:
     - Why name the new column `employee_id` and not `employeeid_clean`? Because
       that is what the roster calls it, and Step 2 merges on it with `on=`.
     """
-    # TODO: your code here
-    pass
+    out = history.copy()
+    out["employee_id"] = clean_employee_id(out["employeeid"])
+    out["pay_date"] = parse_pay_date(out["payrolldate"])
+    out["hours_worked"] = clean_number(out["hours"])
+    out["rate_usd"] = clean_number(out["rate"])
+    out["gross_pay"] = clean_number(out["total"])
+    return out
 
 
 def add_date_parts(history: pd.DataFrame) -> pd.DataFrame:
@@ -184,5 +189,10 @@ def add_date_parts(history: pd.DataFrame) -> pd.DataFrame:
       from lesson 3-6: `%Y` year, `%m` month, `%d` day.)
     - `return out`. Requires `pay_date`, so it runs after `add_clean_columns`.
     """
-    # TODO: your code here
-    pass
+    out = history.copy()
+    out["week_ending"] = (out["pay_date"]).dt.strftime("%Y-%m-%d")
+    out["month"] = (out["pay_date"]).dt.strftime("%Y-%m")
+    return out
+
+
+
