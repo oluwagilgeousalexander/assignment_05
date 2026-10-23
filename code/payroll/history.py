@@ -52,8 +52,10 @@ def clean_employee_id(ids: pd.Series) -> pd.Series:
     - The mistake people make: stopping after `.upper()`. `"E4"` is not `"E004"`,
       and Step 2's merge will not match it to anyone on the roster.
     """
-    # TODO: your code here
-    pass
+    stripped_id = ids.str.strip().str.upper()
+    digits = stripped_id.str[1:].str.zfill(3)
+    return "E" + digits
+
 
 
 def clean_number(values: pd.Series) -> pd.Series:
@@ -82,8 +84,9 @@ def clean_number(values: pd.Series) -> pd.Series:
     - This is `clean_currency` from Assignment 04, with no `apply` — the `.str`
       methods do the looping for you.
     """
-    # TODO: your code here
-    pass
+    cleaned_val = values.str.replace("$", "", regex=False).str.replace(",","",regex=False).str.strip()
+    return pd.to_numeric(cleaned_val, errors="coerce").fillna(0.0)
+    
 
 
 def parse_pay_date(values: pd.Series) -> pd.Series:
@@ -110,8 +113,9 @@ def parse_pay_date(values: pd.Series) -> pd.Series:
       single format cannot read both styles — and guessing (leaving `format=` off)
       is how `"03/04/2026"` silently becomes April 3rd on someone's laptop.
     """
-    # TODO: your code here
-    pass
+    us = pd.to_datetime(values, format="%m/%d/%Y", errors="coerce")
+    iso = pd.to_datetime(values, format="%Y-%m-%d", errors = "coerce")
+    return us.fillna(iso).fillna('NaT')
 
 
 def combine_exports(exports: list) -> pd.DataFrame:
