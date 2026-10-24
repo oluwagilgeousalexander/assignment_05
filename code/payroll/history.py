@@ -86,7 +86,7 @@ def clean_number(values: pd.Series) -> pd.Series:
     """
     cleaned_val = values.str.replace("$", "", regex=False).str.replace(",","",regex=False).str.strip()
     return pd.to_numeric(cleaned_val, errors="coerce").fillna(0.0)
-    
+
 
 
 def parse_pay_date(values: pd.Series) -> pd.Series:
@@ -114,7 +114,7 @@ def parse_pay_date(values: pd.Series) -> pd.Series:
       is how `"03/04/2026"` silently becomes April 3rd on someone's laptop.
     """
     us = pd.to_datetime(values, format="%m/%d/%Y", errors="coerce")
-    iso = pd.to_datetime(values, format="%Y-%m-%d", errors = "coerce")
+    iso = pd.to_datetime(values, format="%Y-%m-%d", errors="coerce")
     return us.fillna(iso).fillna('NaT')
 
 
@@ -170,6 +170,7 @@ def add_clean_columns(history: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+
 def add_date_parts(history: pd.DataFrame) -> pd.DataFrame:
     """Return a copy with two text columns from `pay_date`: `week_ending`, `month`.
 
@@ -193,6 +194,3 @@ def add_date_parts(history: pd.DataFrame) -> pd.DataFrame:
     out["week_ending"] = (out["pay_date"]).dt.strftime("%Y-%m-%d")
     out["month"] = (out["pay_date"]).dt.strftime("%Y-%m")
     return out
-
-
-
