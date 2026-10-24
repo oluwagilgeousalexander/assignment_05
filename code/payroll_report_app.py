@@ -58,9 +58,8 @@ from payroll import (
     load_export
 )
 
-st.title("Salt City Coffee: quarterly payroll report")
-st.write("Upload the quarter's weekly payroll exports (old spreadsheet or app format) to see the reports.")
- 
+st.title("Salt City Coffee — Quarterly Payroll Report")
+
 roster = load_employees()
 uploads = st.file_uploader(
     "Weekly payroll exports (CSV)",

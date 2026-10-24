@@ -1,7 +1,7 @@
-Write your reflection here.
-
-See reflection.md for what makes a good reflection — be specific, use the
-terminology from this assignment (grain, long vs. wide, vectorized .str methods,
-coerce, NaT, pd.to_datetime format, .dt, concat, ignore_index, group by, named
-aggregation, reset_index, pivot_table, fill_value, melt, lineage), and make it
-actionable.
+Over the course of this assignment, I was very glad that I showed significant improve in my
+understand of how and when to stack and merge files, both conceptually (when do use want to use 
+concat vs merge, what side do you merge on, etc) and in terms of coding, as I struggled to wrap my
+ head around .merge in the past. Something that I struggle with in this assignment continues to be 
+ the design of the applications on streamlit, as well as my understanding of synxtax and functions.
+ I nned to continue working on chaining functions, my understanding of certain functions like .agg,
+ and understanding different python/pandas errors.
