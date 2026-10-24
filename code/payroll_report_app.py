@@ -71,10 +71,10 @@ if uploads:
     history = build_history([load_export(u) for u in uploads], roster)
     unmatched = history[history["department"].isna()]
     if not unmatched.empty:
-        ids = ", ".join(sorted(unmatched["employee_id"].unique()))
+        ids = ", ".join(sorted(unmatched["employeeid"].str.strip().unique()))
         st.warning(
-            f"These employee IDs are not on the roster: {ids}"
-            )
+        f"These employee IDs are not on the roster and left out of the reports: {ids}"
+        )
     matched = history[history["department"].notna()]
     department = st.selectbox(
         "Department",
@@ -96,14 +96,15 @@ if uploads:
     else:
         start = end = dates
     in_range = (
-        matched["pay_date"].dt.date >= start) & (matched["pay_date"].dt.date <= end)
+        matched["pay_date"].dt.date >= start) & (matched["pay_date"].dt.date <= end
+                                                 )
     selected = matched[in_range]
     if department != "All":
         selected = selected[selected["department"] == department]
     st.subheader(f"{department}, {start} to {end}")
     if selected.empty:
         st.info("No payroll rows match this selection.")
-        st.stop() 
+        st.stop()
     col_weeks, col_employees, col_hours, col_pay = st.columns(4)
     col_weeks.metric("Weeks", selected["week_ending"].nunique())
     col_employees.metric("Employees", selected["employee_id"].nunique())
