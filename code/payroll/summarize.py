@@ -36,7 +36,6 @@ def format_name(names: pd.Series) -> pd.Series:
     Strip each part, then join them back together in the other order with a
     space between. Same `.str` toolkit as `clean_employee_id`; no `apply`.
     """
-    # TODO:
     split_name = names.str.split(",")
     last = split_name.str[0].str.strip()
     first = split_name.str[1].str.strip()
@@ -59,7 +58,6 @@ def add_roster(history: pd.DataFrame, employees: pd.DataFrame) -> pd.DataFrame:
     history on `employee_id`. The history must have been through
     `add_clean_columns` first — the raw `employeeid` does not match anything.
     """
-    # TODO:
     roster_copy = employees.copy()
     roster_copy["display_name"] = format_name(employees["name"])
     roster_copy = roster_copy[['employee_id', 'display_name', 'department']]
@@ -77,7 +75,6 @@ def build_history(exports: list, employees: pd.DataFrame) -> pd.DataFrame:
     their work. The result has every raw column, every column the steps add, and
     one row per row of every export.
     """
-    # TODO:
     out = combine_exports(exports)
     out = add_clean_columns(out)
     out = add_date_parts(out)
@@ -113,7 +110,6 @@ def summarize_employees(history: pd.DataFrame) -> pd.DataFrame:
     of a group-by by default. The app warns about them; this function does not
     need to.
     """
-    # TODO:
     summary = history.groupby(["employee_id", "display_name", "department"]).agg(
         weeks_paid=("week_ending", "count"),
         total_hours=("hours_worked", "sum"),

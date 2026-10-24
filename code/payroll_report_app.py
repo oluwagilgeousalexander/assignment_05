@@ -67,22 +67,20 @@ uploads = st.file_uploader(
     key="exports",
     accept_multiple_files=True,
 )
- 
 if uploads:
     history = build_history([load_export(u) for u in uploads], roster)
- 
     unmatched = history[history["department"].isna()]
     if not unmatched.empty:
         ids = ", ".join(sorted(unmatched["employee_id"].unique()))
-        st.warning(f"These employee IDs are not on the roster and are left out of the reports: {ids}")
+        st.warning(
+            f"These employee IDs are not on the roster: {ids}"
+            )
     matched = history[history["department"].notna()]
- 
     department = st.selectbox(
         "Department",
         ["All"] + sorted(matched["department"].unique()),
         key="department",
     )
- 
     valid_dates = matched["pay_date"].dropna()
     if valid_dates.empty:
         st.warning("No readable pay dates in the uploaded files.")
@@ -97,33 +95,26 @@ if uploads:
         start, end = (dates[0], dates[-1])
     else:
         start = end = dates
- 
-    in_range = (matched["pay_date"].dt.date >= start) & (matched["pay_date"].dt.date <= end)
+    in_range = (
+        matched["pay_date"].dt.date >= start) & (matched["pay_date"].dt.date <= end)
     selected = matched[in_range]
     if department != "All":
         selected = selected[selected["department"] == department]
- 
     st.subheader(f"{department}, {start} to {end}")
- 
     if selected.empty:
         st.info("No payroll rows match this selection.")
-        st.stop()
- 
+        st.stop() 
     col_weeks, col_employees, col_hours, col_pay = st.columns(4)
     col_weeks.metric("Weeks", selected["week_ending"].nunique())
     col_employees.metric("Employees", selected["employee_id"].nunique())
     col_hours.metric("Total hours", f"{selected['hours_worked'].sum():,.2f}")
     col_pay.metric("Total gross pay", f"${selected['gross_pay'].sum():,.2f}")
- 
     monthly = pay_by_month(selected)
     st.bar_chart(monthly, x="month")
- 
     st.dataframe(summarize_employees(selected))
- 
     grid = hours_grid(selected)
     st.dataframe(grid)
     st.dataframe(missed_weeks(grid))
- 
     st.download_button(
         "Download pay by month (CSV)",
         data=monthly.to_csv(index=False),
